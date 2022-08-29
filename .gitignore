@@ -1,0 +1,13 @@
+.idea
+code
+.env
+
+# mysql
+mysql
+
+# nginx
+nginx/log
+
+# redis
+redis/redis-data
+redis/redis/redis.log

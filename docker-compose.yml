@@ -1,0 +1,114 @@
+version: '3'
+
+services:
+  enginx:
+    image: nginx:1.19-alpine
+    container_name: enginx
+    restart: always
+    ports:
+      - ${HTTP_PORT}:80
+      - ${HTTPS_PORT}:443
+    volumes:
+      - ${CODE_PATH}:/var/www/html
+#      - ${FILES_PATH}:/var/www/html/public/files
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/log:/var/log/nginx
+    depends_on:
+      - ephp-fpm
+    networks:
+      local_net:
+        ipv4_address: 11.11.0.10
+
+  ephp-fpm:
+    build: .
+    container_name: ephp-fpm
+    restart: always
+    working_dir: /var/www/html
+    ports:
+      - ${PHP_PORT}:9090
+    volumes:
+      - ${CODE_PATH}:/var/www/html
+      - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      XDEBUG_CONFIG: 'remote_host=192.168.220.1 remote_enable=1'
+      PHP_IDE_CONFIG: 'serverName=Docker'
+    depends_on:
+      - eredis
+    networks:
+      local_net:
+        ipv4_address: 11.11.0.20
+
+  epsql:
+    image: bitnami/postgresql:11-debian-10
+    container_name: epsql
+    restart: always
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=${POSTGRESQL_REPLICATION_USER}
+      - POSTGRESQL_REPLICATION_PASSWORD=${POSTGRESQL_REPLICATION_PASSWORD}
+      - POSTGRESQL_USERNAME=${POSTGRESQL_USERNAME}
+      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
+      - POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - ${POSTGRESQL_PORT}:5432
+    volumes:
+      - epsql:/bitnami/postgresql
+    networks:
+      local_net:
+        ipv4_address: 11.11.0.30
+
+  epgadmin:
+    image: dpage/pgadmin4
+    container_name: epgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - ${PGADMIN_PORT}:80
+    volumes:
+      - epgadmin:/root/.pgadmin
+    networks:
+      local_net:
+        ipv4_address: 11.11.0.40
+
+  eredis:
+    image: redis:6-alpine
+    container_name: eredis
+    restart: always
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - ./redis/redis-data:/var/lib/redis
+      - ./redis/redis:/usr/local/etc/redis
+    ports:
+      - ${REDIS_PORT}:6379
+    networks:
+      local_net:
+        ipv4_address: 11.11.0.50
+
+#  node:
+#    build: ./sockets
+#    restart: always
+#    container_name: node
+#    volumes:
+#      - ${SOCKET_FILES_PATH}:/socket
+#    ports:
+#      - ${SOCKET_PORT}:5000
+#    networks:
+#      net:
+#        ipv4_address: 11.11.0.60
+
+volumes:
+  epsql:
+    driver: local
+  epgadmin:
+
+networks:
+  local_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 11.11.0.0/16
