@@ -1,6 +1,6 @@
 FROM php:fpm
 
-RUN apt-get update && apt-get install -y
+RUN apt-get update && apt-get install -y \
     curl \
     libonig-dev \
     libxml2-dev \
