@@ -18,6 +18,9 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 
+#xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
