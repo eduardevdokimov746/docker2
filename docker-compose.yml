@@ -88,6 +88,26 @@ services:
     networks:
       local_net:
         ipv4_address: 11.11.0.50
+    
+  erebbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: erebbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - ${RABBITMQ_PORT}:5672
+      - ${RABBITMQ_MANAGEMENT_PORT}:15672
+      - ${RABBITMQ_STOMP_PORT}:61613
+      - ${RABBITMQ_WEB_STOMP_PORT}:15674
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq/
+      - ./rabbitmq/log:/var/log/rabbitmq
+      - ./rabbitmq/conf:/etc/rabbitmq
+    networks:
+      local_net:
+        ipv4_address: 11.11.0.70
 
 #  node:
 #    build: ./sockets

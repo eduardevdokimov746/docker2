@@ -1,4 +1,4 @@
-FROM php:fpm
+FROM php:8.1-fpm
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -28,7 +28,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # GD
 RUN docker-php-ext-configure gd --with-webp --with-jpeg --with-xpm --with-freetype
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl pdo_pgsql pgsql
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl pdo_pgsql pgsql sockets
 
 #COPY custom.conf /etc/apache2/sites-available/custom.conf
 

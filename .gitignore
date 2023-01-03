@@ -11,3 +11,6 @@ nginx/log
 # redis
 redis/redis-data
 redis/redis/redis.log
+
+#rabbitmq
+rabbitmq
