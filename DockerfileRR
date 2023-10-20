@@ -1,4 +1,7 @@
-FROM php:8.1-fpm
+FROM ghcr.io/roadrunner-server/roadrunner:latest AS roadrunner
+FROM php:8.2-cli
+
+COPY --from=roadrunner /usr/bin/rr /usr/local/bin/rr
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -46,3 +49,12 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl pdo_pgsq
 #    && rm -r php-zmq
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+COPY /home/edik/obuch/roadrunner /var/www/html
+
+WORKDIR /var/www/html
+
+RUN composer require spiral/roadrunner-http nyholm/psr7
+
+CMD rr serve -c .rr.yaml
+
