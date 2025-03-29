@@ -1,5 +1,5 @@
 FROM ghcr.io/roadrunner-server/roadrunner:latest AS roadrunner
-FROM php:8.2-cli
+FROM php:8.4-cli
 
 COPY --from=roadrunner /usr/bin/rr /usr/local/bin/rr
 
@@ -24,7 +24,7 @@ RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 
 #xdebug
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+#RUN pecl install xdebug protobuf-4.26.0RC3 xhprof && docker-php-ext-enable xdebug xhprof
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -50,11 +50,11 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl pdo_pgsq
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-COPY /home/edik/obuch/roadrunner /var/www/html
-
 WORKDIR /var/www/html
 
-RUN composer require spiral/roadrunner-http nyholm/psr7
+#RUN composer require spiral/roadrunner-http nyholm/psr7
 
-CMD rr serve -c .rr.yaml
+#RUN composer require spiral/roadrunner-laravel
+
+#CMD rr serve -c .rr.yaml
 

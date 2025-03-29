@@ -1,0 +1,49 @@
+{
+  "admin": true,
+  "api_key": "secret",
+  "admin_password": "123",
+  "admin_secret": "admin_secret",
+  "allowed_origins": [
+    "*"
+  ],
+  "token_hmac_secret_key": "my_secret",
+
+  "debug": true,
+  "proxy_publish": true,
+  "proxy_subscribe": true,
+
+  "allow_subscribe_for_client": true,
+
+  "proxy_connect_endpoint": "grpc://roadrunner:30000",
+  "proxy_connect_timeout": "10s",
+  "proxy_publish_endpoint": "grpc://roadrunner:30000",
+  "proxy_publish_timeout": "10s",
+  "proxy_subscribe_endpoint": "grpc://roadrunner:30000",
+  "proxy_subscribe_timeout": "10s",
+  "proxy_refresh_endpoint": "grpc://roadrunner:30000",
+  "proxy_refresh_timeout": "10s",
+  "proxy_sub_refresh_endpoint": "grpc://roadrunner:30000",
+  "proxy_sub_refresh_timeout": "1s",
+  "proxy_rpc_endpoint": "grpc://roadrunner:30000",
+  "proxy_rpc_timeout": "10s",
+
+  "grpc_api": true,
+  "grpc_api_address": "0.0.0.0",
+  "grpc_api_port": 30001,
+
+  "namespaces": [
+    {
+      "name": "public",
+      "presence": true,
+      "allow_subscribe_for_client": true,
+      "allow_publish_for_subscriber": true,
+      "allow_presence_for_subscriber": true,
+      "proxy_publish": true
+    },
+    {
+      "name": "cross",
+      "allow_subscribe_for_client": true,
+      "allow_publish_for_subscriber": true
+    }
+  ]
+}

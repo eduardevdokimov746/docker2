@@ -1,4 +1,5 @@
-FROM php:8.1-fpm
+FROM php:8.3-fpm
+#FROM php:7.4-fpm
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -21,7 +22,7 @@ RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 
 #xdebug
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+#RUN pecl install xdebug xhprof && docker-php-ext-enable xdebug xhprof
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
